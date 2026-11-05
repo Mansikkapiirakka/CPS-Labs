@@ -11,21 +11,21 @@
 
 int main(void) {
     DDRB |= (1u << PB5);
-    DDRD &= ~(1u << PD2);
-    PORTD |= (1u << PD2);
+    DDRD &= ~(1u << PD2);       //set extButton input; DataDirectionRegisterD
+    PORTD |= (1u << PD2);       //pull-up resistor
     
-    EICRA &= ~(1u << ISC00);
-    EICRA |= (1u << ISC01);
+    EICRA &= ~(1u << ISC00);    //ExternalInterruptControlRegisterA; set bit 0 InterruptSenseControl 0 
+    EICRA |= (1u << ISC01);     // set bit 1 to 1 --> by setting to 10 activate falling edge
     
-    EIFR &= ~(1u << INTF0);
-    EIMSK |= (1u << INT0);
-    sei();
+    EIFR &= ~(1u << INTF0);     //ExternalInterruptFlagRegister; clear flag0
+    EIMSK |= (1u << INT0);      //ExternalInterruptMaSKregister; enable ExternalInterrupt0
+    sei();                      //Enable Interrupt Globally 
     
     while (1) {
         
     }
 }
 
-ISR(INT0_vect) {
-    PORTB ^= (1u << PB5);
+ISR(INT0_vect) {            //When Interrupt0 execute...
+    PORTB ^= (1u << PB5);   
 }
