@@ -30,6 +30,7 @@
   5. 
   A pull-up is needed for a stable input, because a floating input is influenced by noise and unknowable. 
 
+ #line(length: 100%)
 ==== D3
   2.
   The ISR must be able to identify the source, because if multiple pins change on the same port, they would both trigger the interrupt, so ISR must know which pin to trigger for.
@@ -37,4 +38,8 @@
   PCINT may be triggered from multiple pins from different ports, while INT0 can only be triggered by PD2. PCINT has no trigger selection, only logic level change. INT0 has a selection of four trigger modes.
   4.
   The button won't do anything, since the PCMSK0 enables interrupting for the pins.
+
+   #line(length: 100%)
 ==== D4
+  5.
+  The ISR must not contain \_delay\_(500), because that would block all other execution for half a second.
