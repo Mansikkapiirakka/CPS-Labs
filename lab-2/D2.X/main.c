@@ -18,9 +18,21 @@ int main(void) {
     DDRD &= ~(1u << PD3);       //set extButton input; DataDirectionRegisterD
     PORTD |= (1u << PD3);       //pull-up resistor
     
+    /// Falling edge ///
+    //EICRA &= ~(1u << ISC10);
+    //EICRA |= (1u << ISC11); 
     
-    EICRA &= ~(1u << ISC10);    //ExternalInterruptControlRegisterA; set bit 0 InterruptSenseControl 0 
-    EICRA |= (1u << ISC11);     // set bit 1 to 1 --> by setting to 10 activate falling edge
+    /// Rising edge ///
+    //EICRA |= (1u << ISC10);
+    //EICRA |= (1u << ISC11);
+    
+    /// Any logical change ///
+    //EICRA |= (1u << ISC10);
+    //EICRA &= ~(1u << ISC11);
+    
+    /// Low level ///
+    EICRA &= ~(1u << ISC10);
+    EICRA &= ~(1u << ISC11);
     
     EIFR &= ~(1u << INTF1);     //ExternalInterruptFlagRegister; clear flag1
     EIMSK |= (1u << INT1);      //ExternalInterruptMaSKregister; enable ExternalInterrupt1
