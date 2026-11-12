@@ -1,2 +1,3 @@
-/lab-2/D3.X/build/
-/lab-2/D3.X/dist/
+build/
+dist/
+debug/
