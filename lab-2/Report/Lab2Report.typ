@@ -52,7 +52,7 @@
   The correct value for the OCR1A is a decimal number.
   This can't be represented in the OCR1A register.
   The correct value must be rounded, which causes error in the timing. The error is $plus.minus 8 mu"s"$ depending on how the value is rounded.
-  4. 
+  4.
   The ticks were implemented into the interrupt service routine.
     ```C 
       ISR(TIMER1_COMPA_vect) {
@@ -65,3 +65,12 @@
   5.
   The ISR must not contain \_delay\_(500), because that would block all other execution for half a second.
 
+==== D5
+
+1.
+Prescaler = 64 :\
+$f = (16 "MHz")/(64) = 250 "kHz"$\
+$T_"overflow" = 256 / (250 "kHz") = 1024 mu"s"$
+
+Prescaler = 1024:\
+$f = (16 "MHz")/(1024) = $
