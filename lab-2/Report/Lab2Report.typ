@@ -41,5 +41,18 @@
 
    #line(length: 100%)
 ==== D4
+  1.
+  The register values matched with the code.
+  2.
+  Prediction: The new period is 2 ms.
+  Measurement agrees with the prediction.
+  3.
+  $f_"new" = (16 "MHz") / 256 = 62.5 "kHz"$\
+  $"OCR1A" = 62.5 "kHz" * 1 "ms" - 1= 61.5$\
+  The correct value for the OCR1A is a decimal number.
+  This can't be represented in the OCR1A register.
+  The correct value must be rounded, which causes error in the timing. The error is $plus.minus 8 mu"s"$ depending on how the value is rounded.
+  4.
   5.
   The ISR must not contain \_delay\_(500), because that would block all other execution for half a second.
+
