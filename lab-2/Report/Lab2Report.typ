@@ -142,3 +142,13 @@ Which matches our observations.
 
 + Explain why Timer3/Timer4 examples must not be copied into an ATmega328P project.\
   A:
+
+
+==== I
+  I.5.4
+
+  TIMER ISR: 41 cycles, $qty(2.5625, "us")$
+
+  INT1 ISR: 64 cycles, $qty(4, "us")$
+
+  INT0 ISR: 64 cycles, $qty(4, "us")$
