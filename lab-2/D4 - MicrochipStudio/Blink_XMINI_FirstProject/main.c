@@ -25,7 +25,7 @@ static void timer1_init_1ms(void) {
 	   TCCR1A = 0; TCCR1B = 0; TCNT1 = 0;
 	   OCR1A = 249; // ~1 ms at 16 MHz / 64
 	   TCCR1B |= (1u << WGM12); // CTC
-	   TIFR1 &= ~(1u << OCF1A); // clear stale flag (W1C)
+	   TIFR1 |= (1u << OCF1A); // clear stale flag (W1C)
 	   TIMSK1 |= (1u << OCIE1A); // enable compare-A interrupt
 	   TCCR1B |= (1u << CS11) | (1u << CS10); // prescaler 64: starts the timer
 }
