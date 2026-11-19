@@ -1,0 +1,174 @@
+Disassembly Listing for method_1
+Generated From:
+C:/Users/Amor/Documents/CPS/CPS-Labs/lab-2/method_1.X/dist/default/debug/method_1.X.debug.elf
+19-Nov-2026 10:53:56
+Disassembly listing generated using *On-Demand*.
+Only source files related to execution scopes reached during the current debug session are included.
+To generate a full disassembly for all files, switch to
+*Pre-Processed (Legacy)* symbol processing and rebuild.
+Location: Tools > Options > Embedded > Debugger > Symbol Load Method.
+
+---  /crt1/gcrt1.S  -------------------------------------------------------------------------------------
+0000  940C     JMP __trampolines_start
+0004  940C     JMP __bad_interrupt
+0008  940C     JMP __bad_interrupt
+000C  940C     JMP __bad_interrupt
+0010  940C     JMP __bad_interrupt
+0014  940C     JMP __bad_interrupt
+0018  940C     JMP __bad_interrupt
+001C  940C     JMP __bad_interrupt
+0020  940C     JMP __bad_interrupt
+0024  940C     JMP __bad_interrupt
+0028  940C     JMP __bad_interrupt
+002C  940C     JMP __bad_interrupt
+0030  940C     JMP __bad_interrupt
+0034  940C     JMP __bad_interrupt
+0038  940C     JMP __bad_interrupt
+003C  940C     JMP __bad_interrupt
+0040  940C     JMP __bad_interrupt
+0044  940C     JMP __bad_interrupt
+0048  940C     JMP __bad_interrupt
+004C  940C     JMP __bad_interrupt
+0050  940C     JMP __bad_interrupt
+0054  940C     JMP __bad_interrupt
+0058  940C     JMP __bad_interrupt
+0123  940C     JMP __eeprom_end
+005D  2411     EOR R1, R1
+005E  BE1F     OUT 0x3F, R1
+005F  EFCF     LDI R28, 0xFF
+0060  E0D8     LDI R29, 0x08
+0061  BFDE     OUT 0x3E, R29
+0062  BFCD     OUT 0x3D, R28
+0063  EBE4     LDI R30, 0xB4
+0081  940E     CALL main
+---  C:/Users/Amor/Documents/CPS/CPS-Labs/lab-2/method_1.X/main.c  --------------------------------------
+1:             #include <avr/io.h>
+2:             #include <stdint.h>
+3:             #include <stdio.h>
+4:             
+5:             #define F_CPU 16000000UL
+6:             #include <util/delay.h>
+7:             #include <avr/interrupt.h>
+8:             
+9:             volatile uint16_t elapsed_ms = 0;
+10:            volatile uint8_t led_due = 0;
+11:            volatile uint16_t ten_ms_tick = 0;
+12:            volatile uint16_t hundred_ms_tick = 0;
+13:            
+14:            ISR(TIMER1_COMPA_vect) {
+0087  920F     PUSH R0
+0088  B60F     IN R0, 0x3F
+0089  920F     PUSH R0
+008A  921F     PUSH R1
+008B  2411     EOR R1, R1
+008C  932F     PUSH R18
+008D  933F     PUSH R19
+008E  934F     PUSH R20
+008F  935F     PUSH R21
+0090  936F     PUSH R22
+0091  937F     PUSH R23
+0092  938F     PUSH R24
+0093  939F     PUSH R25
+0094  93AF     PUSH R26
+0095  93BF     PUSH R27
+15:            	if (++elapsed_ms >= 9) { 
+0096  9180     LDS R24, 0x104
+0098  9190     LDS R25, 0x105
+009A  9601     ADIW R24, 0x01
+009B  9390     STS 0x105, R25
+009D  9380     STS 0x104, R24
+009F  9709     SBIW R24, 0x09
+00A0  F188     BRCS 0xD2
+16:            		elapsed_ms = 0; ten_ms_tick++; 
+00A1  9210     STS 0x105, R1
+00A3  9210     STS 0x104, R1
+00A5  9180     LDS R24, 0x102
+00A7  9190     LDS R25, 0x103
+00A9  9601     ADIW R24, 0x01
+00AA  9390     STS 0x103, R25
+00AC  9380     STS 0x102, R24
+17:            		if ((ten_ms_tick % 10) == 0) {
+00AE  9140     LDS R20, 0x102
+00B0  9150     LDS R21, 0x103
+00B2  019A     MOVW R18, R20
+00B3  ECAD     LDI R26, 0xCD
+00B4  ECBC     LDI R27, 0xCC
+00B5  940E     CALL __umulhisi3
+00B7  9596     LSR R25
+00B8  9587     ROR R24
+00B9  9596     LSR R25
+00BA  9587     ROR R24
+00BB  9596     LSR R25
+00BC  9587     ROR R24
+00BD  0F88     ADD R24, R24
+00BE  1F99     ADC R25, R25
+00BF  019C     MOVW R18, R24
+00C0  0F22     ADD R18, R18
+00C1  1F33     ADC R19, R19
+00C2  0F22     ADD R18, R18
+00C3  1F33     ADC R19, R19
+00C4  0F82     ADD R24, R18
+00C5  1F93     ADC R25, R19
+00C6  1748     CP R20, R24
+00C7  0759     CPC R21, R25
+00C8  F449     BRNE 0xD2
+18:                        hundred_ms_tick++;
+00C9  9180     LDS R24, 0x100
+00CB  9190     LDS R25, 0x101
+00CD  9601     ADIW R24, 0x01
+00CE  9390     STS 0x101, R25
+00D0  9380     STS 0x100, R24
+19:                    }
+20:            	}
+21:            }
+00D2  91BF     POP R27
+00D3  91AF     POP R26
+00D4  919F     POP R25
+00D5  918F     POP R24
+00D6  917F     POP R23
+00D7  916F     POP R22
+00D8  915F     POP R21
+00D9  914F     POP R20
+00DA  913F     POP R19
+00DB  912F     POP R18
+00DC  901F     POP R1
+00DD  900F     POP R0
+00DE  BE0F     OUT 0x3F, R0
+00DF  900F     POP R0
+00E0  9518     RETI
+22:            
+23:            static void timer1_init_1ms(void) {
+24:            	   TCCR1A = 0; TCCR1B = 0; TCNT1 = 0;
+00E2  9210     STS 0x80, R1
+25:            	   OCR1A = 249; // ~1 ms at 16 MHz / 64
+26:            	   TCCR1B |= (1u << WGM12); // CTC
+00F1  8180     LD R24, Z
+27:            	   TIFR1 |= (1u << OCF1A); // clear stale flag (W1C)
+00F4  9AB1     SBI 0x16, 1
+28:            	   TIMSK1 |= (1u << OCIE1A); // enable compare-A interrupt
+00F5  E6AF     LDI R26, 0x6F
+29:            	   TCCR1B |= (1u << CS11) | (1u << CS10); // prescaler 64: starts the timer
+00FA  8180     LD R24, Z
+00FA  8180     LD R24, Z
+00FA  8180     LD R24, Z
+30:            }
+31:            
+32:            int main(void) {
+33:            	DDRB |= (1u << DDB5);
+00E1  9A25     SBI 0x04, 5
+34:            	timer1_init_1ms();
+35:            	sei();
+00FD  9478     SEI
+36:            	while (1) { 
+37:            		if (led_due) { led_due = 0; PORTB ^= (1u << PB5); } 
+00FE  E290     LDI R25, 0x20
+00FF  9180     LDS R24, 0x106
+0101  2388     AND R24, R24
+0102  F3E1     BREQ 0xFF
+0103  9210     STS 0x106, R1
+0105  B185     IN R24, 0x05
+0106  2789     EOR R24, R25
+0107  B985     OUT 0x05, R24
+0108  CFF6     RJMP 0xFF
+38:            	}
+39:            }

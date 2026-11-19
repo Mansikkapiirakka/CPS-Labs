@@ -73,7 +73,30 @@ $f = (16 "MHz")/(64) = 250 "kHz"$\
 $T_"overflow" = 256 / (250 "kHz") = 1024 mu"s"$
 
 Prescaler = 1024:\
-$f = (16 "MHz")/(1024) = $
+$f = (16 "MHz")/(1024) = 15.625 "kHz"$\
+$T_"overflow" = 256/(15.625 "kHz") = 16.384 mu"s"$
+
+2.
+TOV0 is a flag that is set when Timer0 overflows.
+TOIE0 is the enable bit for the Timer0 overflow interrupt service routine.
+
+3.
+Timer1 can achieve an exact interval of 1ms. Timer0 overflow can achieve an interval of 1.024 ms.
+
+==== Method 1
+Measured cycle count and time.
+The ISR takes 14 cycles. There was some weird anomaly of 79 cycles. Likely caused when the second if branch is hit.
+
+The actual counted time is roughly 900 ns shorter than it should be.
+#image("/assets/image.png")
+
+==== Method 2
+
+With all branches included, the cycle count is 79. With no branching the cycle count is 14.
+
+Which matches our observations.
+
+
 
 
 ==== H
