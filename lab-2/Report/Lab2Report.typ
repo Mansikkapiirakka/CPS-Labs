@@ -74,3 +74,48 @@ $T_"overflow" = 256 / (250 "kHz") = 1024 mu"s"$
 
 Prescaler = 1024:\
 $f = (16 "MHz")/(1024) = $
+
+
+==== H
+
++ Find the vector names for INT0, INT1, PCINT0, Timer1 compare A and Timer1 overflow. \
+  
+  No mention of vector names in the datasheet, but they are found in the header file:
+     #table(columns: (1fr, 1fr, 1fr), align: center, stroke: 0.2pt, 
+    [Interrupt source], [Vector name],[Interrupts definition],
+    [INT0], [INT0_vect], [External Interrupt Request 0],
+    [INT1], [INT1_vect], [External Interrupt Request 1],
+    [PCINT0], [PCINT0_vect], [Pin Change Interrupt 0],
+    [Timer1 compare A], [TIMER1_COMPA_vect], [Timer1 Compare A Match],
+    [Timer1 overflow], [TIMER1_OVF_vect], [Timer1 Overflow])
+    
++ Write the four EICRA trigger combinations for INT0.\
+   
+  + 00 - The low level of INT0 generates an interrupt request.
+  + 01 - Any logical change on INT0 generates an interrupt request.
+  + 10 - The falling edge of INT0 generates an interrupt request.
+  + 11 - The rising edge of INT0 generates an interrupt request.
+
++ Explain why clearing a flag differs from enabling a source (EIMSK versus EIFR).\
+
+  Enabling a source allows the interrupt to be triggered, while clearing a flag is done after the interrupt has been triggered to reset the flag for future interrupts.
+  
++ Identify the bit that selects CTC mode, and the bit pattern for divide-by-64.\
+  
+  CTC mode is selected by setting WGM12 to 1 and WGM13, WGM11, WGM10 to 0. \
+  The bit pattern for divide-by-64 is $"CS12"=0$, $"CS11"=1$, $"CS10"=1$.
+
++ Find the Timer1 compare-A enable bit and flag bit.\
+
+  The Timer1 compare-A enable bit is OCIE1A in the TIMSK1 register, and the flag bit is OCF1A in the TIFR1 register.
+
++ Identify the input-capture edge-select bit.\
+  
+  The input-capture edge-select bit is ICES1 in the TCCR1B register.
+
++ Find the interrupt response time and RETI time in the datasheet and check Figure 13 against them.\
+
+  The datasheet specifies a time of 4 clock cycles for both the interrupt response and the RETI time. Figure 13 shows a larger latency (about 20–30 cycles) where completion of the current instruction, interrupt synchronization, vector jump overhead, and the compiler-generated ISR prologue before the first instruction of the ISR body are also included. RETI corresponds to the final 4-cycle block shown in the figure.
+
++ Explain why Timer3/Timer4 examples must not be copied into an ATmega328P project.\
+  A:
