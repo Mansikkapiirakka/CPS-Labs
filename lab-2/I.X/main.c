@@ -32,6 +32,8 @@ volatile uint32_t system_time_ms = 0, measurement_start_ms = 0, measurement_resu
 volatile uint16_t random_delay_ms = 0;
 volatile uint8_t  abort_flag = 0, start_flag = 0; 
 State gameState = IDLE;
+volatile uint32_t results[5]={0,0,0,0,0};
+volatile uint8_t results_len = sizeof(results)/sizeof(results[0]);
 
 static uint8_t int0_triggered = 0, int1_triggered =0;
 static uint32_t int0_last_time = 0, int1_last_time = 0;
@@ -54,7 +56,7 @@ int main() {
             abort_flag = 0;
         }
         
-        if (abort_flag){
+        if (abort){
             CLR_BIT(LED_PORT, LED);
             gameState = ABORTED;
         }
@@ -73,9 +75,22 @@ int main() {
             case MEASURE:
                 if (start){
                     ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
-                        measurement_result_ms = system_time_ms - measurement_start_ms;
+                        measurement_result_ms = system_time_ms - measurement_start_ms + random_delay_ms ;
                         CLR_BIT(LED_PORT, LED);
                         gameState = RESULT;
+                        if (results[results_len-1] == 0){
+                            for(uint8_t i = 0; i < results_len; i++){
+                                if (results[i] == 0) {
+                                    results[i] = measurement_result_ms;
+                                    break;
+                                }
+                            }
+                        } else {
+                            for(uint8_t i = 0; i< results_len-1; i++) {
+                                results[i] = results[i+1];
+                            }
+                            results[results_len-1] = measurement_result_ms;
+                        }
                     }
                 }
                 break;
@@ -90,6 +105,7 @@ int main() {
                 ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
                 abort_flag = 0;
                 gameState = IDLE;
+                CLR_BIT(LED_PORT, LED);
                 }
                 break;
             }
@@ -160,7 +176,6 @@ ISR(TIMER1_COMPA_vect){
             measurement_start_ms = system_time_ms;
             gameState = MEASURE;
             SET_BIT(LED_PORT, LED);
-        }
-        
+        } 
     }
 }
