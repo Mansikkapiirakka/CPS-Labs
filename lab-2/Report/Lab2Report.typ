@@ -95,4 +95,195 @@ The actual counted time is roughly 900 ns shorter than it should be.
 With all branches included, the cycle count is 79. With no branching the cycle count is 14.
 
 Which matches our observations.
+#pagebreak()
+=== Case 1
 
+If sei() is never called, interrupts will be disabled globally. The figure below represents the status register.
+Bit-7 (I) represents the global interrupt enable.
+
+#image("/assets/image-1.png")
+
+OCIE1A is enabled
+
+#image("/assets/image-2.png")
+
+TCNT1 starts at 0
+
+#image("/assets/image-3.png")
+
+OCF1A is never reset
+
+#image("/assets/image-4.png")
+
+=== Case 2
+
+The compiler emmits a warning about a misspelled signal handler.
+The built succeeds
+#image("/assets/image-5.png")
+
+When comparing the disassembled files of the misspelled version and the correct one, you can notice that the misspelled version is significantly shorter.
+Instead of replacing the wrong vector jump with a '\_bad\_interrupt', the compiler seems to have optimized out the parts of the program that are never triggered and removed unused variables.
+
+Here's the disassembled correct program:
+
+#set text(size : 6pt)
+!\#include \<avr/io.h>\
+!\#include \<avr/io.h>\
+!\#include \<stdint.h>\
+!\#define F_CPU 16000000UL\
+!\#include \<util/delay.h>\
+!\#include \<avr/interrupt.h>\
+!volatile uint16_t elapsed_ms = 0;\
+!volatile uint8_t led_due = 0;\
+!volatile uint16_t ten_ms_tick = 0;\
+!volatile uint16_t hundred_ms_tick = 0;\
+!ISR(TIMER1_COMPA_vect) {\
+0x6E: PUSH R0\
+0x6F: IN R0, 0x3F\
+0x70: PUSH R0\
+0x71: PUSH R1\
+0x72: EOR R1, R1\
+0x73: PUSH R18\
+0x74: PUSH R19\
+0x75: PUSH R20\
+0x76: PUSH R21\
+0x77: PUSH R22\
+0x78: PUSH R23\
+0x79: PUSH R24\
+0x7A: PUSH R25\
+0x7B: PUSH R26\
+0x7C: PUSH R27\
+!	if (++elapsed_ms >= 9) { \
+0x7D: LDS R24, 0x105\
+0x7F: LDS R25, 0x106\
+0x81: ADIW R24, 0x01\
+0x82: STS 0x106, R25\
+0x84: STS 0x105, R24\
+0x86: SBIW R24, 0x09\
+0x87: BRCS 0xBA\
+!		elapsed_ms = 0; ten_ms_tick++; \
+0x88: STS 0x106, R1\
+0x8A: STS 0x105, R1\
+0x8C: LDS R24, 0x102\
+0x8E: LDS R25, 0x103\
+0x90: ADIW R24, 0x01\
+0x91: STS 0x103, R25\
+0x93: STS 0x102, R24\
+!		if ((ten_ms_tick % 10) == 0) {hundred_ms_tick++;}\
+0x95: LDS R20, 0x102\
+0x97: LDS R21, 0x103\
+0x99: MOVW R18, R20\
+0x9A: LDI R26, 0xCD\
+0x9B: LDI R27, 0xCC\
+0x9C: CALL __umulhisi3\
+0x9E: MOVW R18, R24\
+0x9F: LSR R19\
+0xA0: ROR R18\
+0xA1: LSR R19\
+0xA2: ROR R18\
+0xA3: LSR R19\
+0xA4: ROR R18\
+0xA5: MOVW R24, R18\
+0xA6: ADD R24, R24\
+0xA7: ADC R25, R25\
+0xA8: ADD R24, R24\
+0xA9: ADC R25, R25\
+0xAA: ADD R24, R18\
+0xAB: ADC R25, R19
+0xAC: ADD R24, R24\
+0xAD: ADC R25, R25\
+0xAE: CP R20, R24\
+0xAF: CPC R21, R25\
+0xB0: BRNE 0xBA\
+0xB1: LDS R24, 0x100\
+0xB3: LDS R25, 0x101\
+0xB5: ADIW R24, 0x01\
+0xB6: STS 0x101, R25\
+0xB8: STS 0x100, R24\
+!	}\
+!}\
+0xBA: POP R27\
+0xBB: POP R26\
+0xBC: POP R25\
+0xBD: POP R24\
+0xBE: POP R23\
+0xBF: POP R22\
+0xC0: POP R21\
+0xC1: POP R20\
+0xC2: POP R19\
+0xC3: POP R18\
+0xC4: POP R1\
+0xC5: POP R0\
+0xC6: OUT 0x3F, R0\
+0xC7: POP R0\
+0xC8: RETI\
+0xC9: SBI 0x04, 5\
+!static void timer1_init_1ms(void) {\
+0xCA: STS 0x80, R1\
+!	   TCCR1A = 0; TCCR1B = 0; TCNT1 = 0;\
+0xCC: LDI R30, 0x81\
+0xCF: STS 0x85, R1\
+!	   OCR1A = 249; // ~1 ms at 16 MHz / 64\
+0xD3: LDI R24, 0xF9\
+!	   TCCR1B |= (1u << WGM12); // CTC\
+0xD9: LD R24, Z\
+0xDA: ORI R24, 0x08\
+!	   TIFR1 |= (1u << OCF1A); // clear stale flag (W1C)\
+0xDC: SBI 0x16, 1
+
+#set text(size : 11pt)
+
+Here's the disassembled program with the misspelled vector:
+
+#set text(size : 5pt)
+
+!int main(void) {\
+0x6E: SBI 0x04, 5\
+!	DDRB |= (1u << DDB5);\
+!	timer1_init_1ms();\
+0x6F: STS 0x80, R1\
+!	sei();\
+0x8A: SEI\
+!	while (1) { \
+0x8C: LDS R24, 0x100\
+!		if (led_due) { led_due = 0; PORTB ^= (1u << PB5); } \
+0x8B: LDI R25, 0x20\
+0x8E: CP R24, R1\
+0x8F: BREQ 0x8C\
+0x90: STS 0x100, R1\
+0x92: IN R24, 0x05\
+0x93: EOR R24, R25\
+0x94: OUT 0x05, R24\
+0x95: RJMP 0x8C\
+
+#set text(size : 11pt)
+
+=== Case 3
+
+Time between ISR entries is about 16 ms
+#image("/assets/image-7.png")
+
+$"tick" = "period" / ("OCR1A" + 1)$\
+
+$"period" approx 16 "ms"$
+
+$"OCR1A" = 249$
+
+$"tick" = (16 "ms")/(249+1) = 64 mu s$
+
+This corresponds to a frequency of 15625 Hz,
+which is 16 MHz / 1024.
+Therefore we can conclude that our prescaler is 1024.
+
+A prescaler value of 101 corresponds to a prescaler value of 1024.
+The clock select bits agree with our observations.
+#image("/assets/image-8.png")
+
+=== Case 4
+
+Variable 'now' and and 'elapsed_ms' before interrupt and after low order byte read:
+
+#image("/assets/image-9.png")
+
+After interrupt and high order byte read:
+#image("/assets/image-10.png")

@@ -1,0 +1,1 @@
+ $(MP_EXTRA_CC_PRE) -mmcu=atmega328pb ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -Wall -DXPRJ_Release=$(CND_CONF)  $(COMPARISON_BUILD) C:\Users\Amor\Documents\CPS\CPS-Labs\lab-2\method_4.X\Blink_XMINI_FirstProject\main.c
