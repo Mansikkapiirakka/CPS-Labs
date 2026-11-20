@@ -7,9 +7,10 @@
     margin: (x: 5%, y: 7%) ,
     number-align: bottom+right,
     numbering: "1 of 1",
-    header: align(right+horizon)[
-      #set text(10pt)
-      Student \ student-number
+    header: align(center+horizon)[
+      #set text(11pt)
+      Eaindray Oo, Amor Moni, Rodolfo Orefice, Tommi Rajala \ 
+      student-number, 2522938, num3, 2518054
       ]
   )
 
@@ -333,11 +334,132 @@ After interrupt and high order byte read:
   A:
 
 
-==== I
+==== I - The MiniProject
+  #figure(image("../../assets/I-State-Diagram.png"), caption: "State Diagram of the MiniProject.")
+  The full implementation can be found on the GitHub, in section I. Some of the parts of the implementation are below, along with explanations. The implementation starts with defining an enum for the states:
+  #set text(8pt)
+  ```c
+    typedef enum State {
+      IDLE = (volatile uint8_t) 1,
+      WAIT = (volatile uint8_t) 2,
+      MEASURE = (volatile uint8_t) 3,        
+      RESULT = (volatile uint8_t) 4,
+      ABORTED = (volatile uint8_t) 5 
+    } State;
+  ```
+  #set text(11pt)
+  Then after declaring all of the functions and variables we get to  ```c main()```:
+  #set text(8pt)
+  ```c
+    int main() {
+      
+      srand(42u); // seed rand()
+      io_init();
+      timer_init();
+      sei();
+      
+      while (1) {
+          uint8_t start, abort;
+          
+          ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+              start = start_flag;
+              abort = abort_flag;
+              start_flag = 0;
+              abort_flag = 0;
+          }
+          
+          if (abort){
+              CLR_BIT(LED_PORT, LED);
+              gameState = ABORTED;
+          }
+          switch (gameState) {
+              case IDLE:
+                  if (start){
+                      uint16_t random_delay = (rand() % (5000 - 2000 + 1)+ 2000);
+                      ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+                          gameState = WAIT;
+                          random_delay_ms = random_delay;
+                      }
+                  }   
+                  break;
+              case WAIT:
+                  break;
+              case MEASURE:
+                  if (start){
+                      ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+                          measurement_result_ms = system_time_ms - measurement_start_ms + random_delay_ms ;
+                          CLR_BIT(LED_PORT, LED);
+                          gameState = RESULT;
+                          if (results[results_len-1] == 0){
+                              for(uint8_t i = 0; i < results_len; i++){
+                                  if (results[i] == 0) {
+                                      results[i] = measurement_result_ms;
+                                      break;
+                                  }
+                              }
+                          } else {
+                              for(uint8_t i = 0; i< results_len-1; i++) {
+                                  results[i] = results[i+1];
+                              }
+                              results[results_len-1] = measurement_result_ms;
+                          }
+                      }
+                  }
+                  break;
+              case RESULT:
+                  if (start){
+                      ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+                          gameState = IDLE;
+                      }
+                  }
+                  break;
+              case ABORTED:
+                  ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+                  abort_flag = 0;
+                  gameState = IDLE;
+                  CLR_BIT(LED_PORT, LED);
+                  }
+                  break;
+              }
+          
+      }
+}
+  ```
+  #set text(11pt)
+  In main generate random numbers using C standard library function ```c rand()```, which is seeded with ```c srand()```. Then we initialize the timer and IO, and enable interrupts. Then the main loop starts, which handles the game states and reaction time results. All shared volatile variables are protected with atomic blocks.
+  
+  I.5.1 
+    
+  The delay selector is built using C standard library functions ```c rand()``` and ```c srand()```.\ 
+  The modulus ```c (upper_limit-lower_limit+1)=(5000-2000+1)=2999``` of the randomly generated number is taken; \
+  ```c rand() % 2999```. Finally the lower limit, 2000, is added to get our final delay time.
+
+  I.5.2
+
+  We prevent index overflow with the following code, which writes to the array until the array is full. Then it simply shifts the contents to the left, overwriting the first and oldest result, before writing the new result in the last slot.
+  ```c
+    if (results[results_len-1] == 0){
+       for(uint8_t i = 0; i < results_len; i++){
+          if (results[i] == 0) {
+            results[i] = measurement_result_ms;
+            break;
+          }
+        }
+    } else {
+      for(uint8_t i = 0; i< results_len-1; i++) {
+        results[i] = results[i+1];
+      }
+      results[results_len-1] = measurement_result_ms;
+    }  
+  ```
+  I.5.3
+
+  Case 6 would not occur in our implementation, since the MEASURE case is not entered until the measuring starts, so pressing INT0 during the wait does nothing.
+
   I.5.4
 
-  TIMER ISR: 41 cycles, $qty(2.5625, "us")$
+  TIMER ISR: 41 cycles, $qty(2.5625, "us")$, % of 1 ms: $approx$ 0.26%
 
-  INT1 ISR: 64 cycles, $qty(4, "us")$
+  INT1 ISR: 64 cycles, $qty(4, "us")$, % of 1 ms: 0.4 %
 
-  INT0 ISR: 64 cycles, $qty(4, "us")$
+  INT0 ISR: 64 cycles, $qty(4, "us")$, % of 1 ms: 0.4%
