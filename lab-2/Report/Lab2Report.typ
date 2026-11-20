@@ -10,15 +10,21 @@
     header: align(center+horizon)[
       #set text(11pt)
       Eaindray Oo, Amor Moni, Rodolfo Orefice, Tommi Rajala \ 
-      student-number, 2522938, num3, 2518054
+      2521921, #h(0.7cm) 2522938, #h(0.9cm) 2525658, #h(1cm) 2518054
       ]
   )
+#show link: underline
 
 = CPS LAB 2 REPORT 
 
-==== D1
+*IMPORTANT:* 
 
-==== D2
+The code and project files for this lab can be found on our #link("https://github.com/Mansikkapiirakka/CPS-Labs")[GitHub].\ Raw link: https://github.com/Mansikkapiirakka/CPS-Labs
+
+== D1
+  After commenting out ``` EIMSK |= (1u << INT0)```, the ISR no longer runs because the interrupt is no longer enabled. Omitting ```c sei()``` on the other hand disables interrupts globally. When only commenting out `EIMSK` other interrupts could still work.
+
+== D2
   3. 
   #table( 
     rows: 2, 
@@ -32,7 +38,7 @@
   A pull-up is needed for a stable input, because a floating input is influenced by noise and unknowable. 
 
  #line(length: 100%)
-==== D3
+== D3
   2.
   The ISR must be able to identify the source, because if multiple pins change on the same port, they would both trigger the interrupt, so ISR must know which pin to trigger for.
   3.
@@ -41,7 +47,7 @@
   The button won't do anything, since the PCMSK0 enables interrupting for the pins.
 
    #line(length: 100%)
-==== D4
+== D4
   1.
   The register values matched with the code.
   2.
@@ -54,7 +60,8 @@
   This can't be represented in the OCR1A register.
   The correct value must be rounded, which causes error in the timing. The error is $plus.minus 8 mu"s"$ depending on how the value is rounded.
   4.
-  The ticks were implemented into the interrupt service routine.
+  The ticks were implemented into the interrupt service routine. 
+  #pagebreak()
     ```C 
       ISR(TIMER1_COMPA_vect) {
 	      if (++elapsed_ms >= 9) { 
@@ -66,7 +73,7 @@
   5.
   The ISR must not contain \_delay\_(500), because that would block all other execution for half a second.
 
-==== D5
+== D5
 
 1.
 Prescaler = 64 :\
@@ -83,7 +90,8 @@ TOIE0 is the enable bit for the Timer0 overflow interrupt service routine.
 
 3.
 Timer1 can achieve an exact interval of 1ms. Timer0 overflow can achieve an interval of 1.024 ms.
-
+#line(length: 100%)
+== F
 ==== Method 1
 Measured cycle count and time.
 The ISR takes 14 cycles. There was some weird anomaly of 79 cycles. Likely caused when the second if branch is hit.
@@ -97,7 +105,7 @@ With all branches included, the cycle count is 79. With no branching the cycle c
 
 Which matches our observations.
 #pagebreak()
-=== Case 1
+==== Case 1
 
 If sei() is never called, interrupts will be disabled globally. The figure below represents the status register.
 Bit-7 (I) represents the global interrupt enable.
@@ -116,7 +124,7 @@ OCF1A is never reset
 
 #image("/assets/image-4.png")
 
-=== Case 2
+==== Case 2
 
 The compiler emmits a warning about a misspelled signal handler.
 The built succeeds
@@ -127,7 +135,8 @@ Instead of replacing the wrong vector jump with a '\_bad\_interrupt', the compil
 
 Here's the disassembled correct program:
 
-#set text(size : 6pt)
+#set text(size : 11pt)
+```asm
 !\#include \<avr/io.h>\
 !\#include \<avr/io.h>\
 !\#include \<stdint.h>\
@@ -231,13 +240,13 @@ Here's the disassembled correct program:
 0xDA: ORI R24, 0x08\
 !	   TIFR1 |= (1u << OCF1A); // clear stale flag (W1C)\
 0xDC: SBI 0x16, 1
-
+```
+#pagebreak()
 #set text(size : 11pt)
 
 Here's the disassembled program with the misspelled vector:
 
-#set text(size : 5pt)
-
+```asm
 !int main(void) {\
 0x6E: SBI 0x04, 5\
 !	DDRB |= (1u << DDB5);\
@@ -256,10 +265,10 @@ Here's the disassembled program with the misspelled vector:
 0x93: EOR R24, R25\
 0x94: OUT 0x05, R24\
 0x95: RJMP 0x8C\
-
+```
 #set text(size : 11pt)
 
-=== Case 3
+==== Case 3
 
 Time between ISR entries is about 16 ms
 #image("/assets/image-7.png")
@@ -280,7 +289,7 @@ A prescaler value of 101 corresponds to a prescaler value of 1024.
 The clock select bits agree with our observations.
 #image("/assets/image-8.png")
 
-=== Case 4
+==== Case 4
 
 Variable 'now' and and 'elapsed_ms' before interrupt and after low order byte read:
 
@@ -289,7 +298,13 @@ Variable 'now' and and 'elapsed_ms' before interrupt and after low order byte re
 After interrupt and high order byte read:
 #image("/assets/image-10.png")
 
-==== H
+#line(length:100%)
+
+==== F.5
+
+ The tree measured times were 269 ms, 189 ms, 350 ms. Mean is 269.3 ms. The variation is quite close, but I wasn't really trying my hardest in this test.
+
+== H
 
 + Find the vector names for INT0, INT1, PCINT0, Timer1 compare A and Timer1 overflow. \
   
@@ -333,11 +348,11 @@ After interrupt and high order byte read:
 + Explain why Timer3/Timer4 examples must not be copied into an ATmega328P project.\
   A:
 
-
-==== I - The MiniProject
+#line(length:100%)
+== I - The MiniProject
   #figure(image("../../assets/I-State-Diagram.png"), caption: "State Diagram of the MiniProject.")
   The full implementation can be found on the GitHub, in section I. Some of the parts of the implementation are below, along with explanations. The implementation starts with defining an enum for the states:
-  #set text(8pt)
+  #set text(11pt)
   ```c
     typedef enum State {
       IDLE = (volatile uint8_t) 1,
@@ -348,26 +363,23 @@ After interrupt and high order byte read:
     } State;
   ```
   #set text(11pt)
-  Then after declaring all of the functions and variables we get to  ```c main()```:
-  #set text(8pt)
+  Then after declaring all of the functions and variables we get to  ```c main()```.  In main we generate random numbers using C standard library function ```c rand()```, which is seeded with ```c srand()```. Then we initialize the timer and IO, and enable interrupts. Then the main loop starts, which handles the game states and reaction time results. All shared volatile variables are protected with atomic blocks. Find the code on the next page:
+  #pagebreak()
+  #set text(9.3pt)
   ```c
     int main() {
-      
       srand(42u); // seed rand()
       io_init();
       timer_init();
       sei();
-      
       while (1) {
           uint8_t start, abort;
-          
           ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
               start = start_flag;
               abort = abort_flag;
               start_flag = 0;
               abort_flag = 0;
           }
-          
           if (abort){
               CLR_BIT(LED_PORT, LED);
               gameState = ABORTED;
@@ -426,15 +438,15 @@ After interrupt and high order byte read:
 }
   ```
   #set text(11pt)
-  In main generate random numbers using C standard library function ```c rand()```, which is seeded with ```c srand()```. Then we initialize the timer and IO, and enable interrupts. Then the main loop starts, which handles the game states and reaction time results. All shared volatile variables are protected with atomic blocks.
+ 
   
-  I.5.1 
+====  I.5.1 
     
   The delay selector is built using C standard library functions ```c rand()``` and ```c srand()```.\ 
   The modulus ```c (upper_limit-lower_limit+1)=(5000-2000+1)=2999``` of the randomly generated number is taken; \
   ```c rand() % 2999```. Finally the lower limit, 2000, is added to get our final delay time.
 
-  I.5.2
+====  I.5.2
 
   We prevent index overflow with the following code, which writes to the array until the array is full. Then it simply shifts the contents to the left, overwriting the first and oldest result, before writing the new result in the last slot.
   ```c
@@ -452,19 +464,19 @@ After interrupt and high order byte read:
       results[results_len-1] = measurement_result_ms;
     }  
   ```
-  I.5.3
+====  I.5.3
 
   Case 6 would not occur in our implementation, since the MEASURE case is not entered until the measuring starts, so pressing INT0 during the wait does nothing.
 
-  I.5.4
+====  I.5.4
 
   TIMER ISR: 41 cycles, $qty(2.5625, "us")$, % of 1 ms: $approx$ 0.26%
 
   INT1 ISR: 64 cycles, $qty(4, "us")$, % of 1 ms: 0.4 %
 
   INT0 ISR: 64 cycles, $qty(4, "us")$
-
-==== J
+#line(length: 100%)
+== J
 
 Using interrupts we can put the MCU in sleep and have it wake up on interrupt. This way we can save huge amounts of energy.
 We learned how different MCU functionalities are configured using registers. 
