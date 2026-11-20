@@ -341,3 +341,35 @@ After interrupt and high order byte read:
   INT1 ISR: 64 cycles, $qty(4, "us")$
 
   INT0 ISR: 64 cycles, $qty(4, "us")$
+
+==== J
+
+Using interrupts we can put the MCU in sleep and have it wake up on interrupt. This way we can save huge amounts of energy.
+We learned how different MCU functionalities are configured using registers. 
+We learned how to use debugging tools to diagnose software issues, such as missing atomic blocks and interrupts that are not activating.
+It was interesting to see how a race condition causes data corruption. The exercise with the  TIMER1_COMPA interrupt and the 32-bit value was a great example of this.
+
+*Bitwise Programming*
+
+Here's an example bitwise operation:
+
+TCCR1B |= (1 << WGM12)
+
+If the operation was not bitwise, all other bits would be set to 0. But we only want to set WGM12, so we must use a bitwise operation.
+
+*Timer Calculations*
+
+
+At 16 MHz with a prescaler value 8, the timer1 frequency is 2 MHz
+
+$"tick" = (8)/(16 "MHz") = 500 "ns"$
+#pagebreak()
+*Design and Debugging*
+
+Interrupts are disabled for 5 ms while a 1 ms compare flag is generated repeatedly. Will the CPU run
+five ISRs afterwards? Explain
+
+There is only a single bit for storing the interrupt flag.
+The CPU doesn't store all 5 events, so only a single ISR
+will be run.
+
