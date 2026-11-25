@@ -16,3 +16,22 @@
 #show link: underline
 
 = CPS LAB 3 REPORT
+
+== TASK 0
+
+== TASK 1
+
+We used a simple program that toggles the LED on and off when pressing the onboard button.
+#table(
+  columns: 4,
+  rows : 3,
+  table.header(
+    [Firmware], [Supply Voltage [V]], [Current [mA]], [Notes/Stability]
+  ),
+  [IDLE/BASELINE],[5.00 ],[39.8],[Seems stable, stared at 40.0 but lowered as it was powered on],
+  [LED ON],[5.00],[42.3],[Also stable]
+)
+#figure(image("//assets/LAB3_TASK1.jpg", height:70%), caption: "Baseline current measurement with multimeter.")
+#pagebreak()
+
+== TASK 2
