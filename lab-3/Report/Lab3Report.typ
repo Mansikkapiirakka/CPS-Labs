@@ -52,3 +52,8 @@ We used a simple program that toggles the LED on and off when pressing the onboa
   )
 
 == TASK 3
+
+  #figure(image("../../assets/LAB3_TASK3_TRANSIENT.jpg"), caption: "One transient captured.")
+
+  == TASK 4
+  
