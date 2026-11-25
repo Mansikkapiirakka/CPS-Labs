@@ -35,3 +35,20 @@ We used a simple program that toggles the LED on and off when pressing the onboa
 #pagebreak()
 
 == TASK 2
+  Running the same program, in idle.
+  #table(
+    columns: 5,
+    rows: 2,
+    table.header(
+      [$R_"shunt" [Omega]$], [$V_"shunt" ["mV"]$],[Calculated $I ["mA"]$], [Meter $I ["mA"]$], [Difference [%]]
+    ),
+    [1],[40],[40],[39.9],[0.25],
+  )
+  #grid(
+    columns: 2,
+    column-gutter: 2pt,
+    figure(image("../../assets/LAB3_TASK2A.jpg"), caption: "Measured current."),
+    figure(image("../../assets/LAB3_TASK2V.png"), caption: "Measured voltage over the shunt.")
+  )
+
+== TASK 3
