@@ -17,7 +17,17 @@
 
 = CPS LAB 3 REPORT
 
+Board: ATmega328PB Xplained Mini  rev. 05\
+Power supply: Tenma 72-13310.\
+
 == TASK 0
+
+#table(columns: (1fr, 1fr, 1fr, 1fr, 1fr), stroke:0.2pt,
+[R],           [$"V"_"R"$(osc)], [$"V"_"R"$(DMM)], [$"I"_"R"$(PSU)], [$I_R ("calc")$], 
+[$10 Omega$],  [$368 "mV"$],     [$0.38 "V"$],     [$31 "mA"$],      [$36.8 "mA"$], 
+[$1.06 Omega$], [$42 "mV"$],      [$0.04 "V"$],     [$35 "mA"$],      [$39.6 "mA"$], 
+[$0.7$],       [too noisy],      [$0 "V"$],        [$37 "mA"$],      [$0 "mA"$], 
+)
 
 == TASK 1
 
