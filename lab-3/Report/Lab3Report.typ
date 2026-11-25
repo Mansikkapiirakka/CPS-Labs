@@ -18,7 +18,7 @@
 = CPS LAB 3 REPORT
 
 Board: ATmega328PB Xplained Mini  rev. 05\
-Power supply: Tenma 72-13310.\
+Power supply: TASK 0: Tenma 72-13310, TASKS 1-4 RIGOL DP932E.\
 
 == TASK 0
 
@@ -41,7 +41,7 @@ We used a simple program that toggles the LED on and off when pressing the onboa
   [IDLE/BASELINE],[5.00 ],[39.8],[Seems stable, stared at 40.0 but lowered as it was powered on],
   [LED ON],[5.00],[42.3],[Also stable]
 )
-#figure(image("//assets/LAB3_TASK1.jpg", height:70%), caption: "Baseline current measurement with multimeter.")
+#figure(image("//assets/LAB3_TASK1.jpg", height:60%), caption: "Baseline current measurement with multimeter.")
 #pagebreak()
 
 == TASK 2
@@ -66,4 +66,21 @@ We used a simple program that toggles the LED on and off when pressing the onboa
   #figure(image("../../assets/LAB3_TASK3_TRANSIENT.jpg"), caption: "One transient captured.")
 
   == TASK 4
-  
+  All currents calculated with 1 $Omega$ shunt.
+  #table(
+    columns: 5,
+    rows: 5,
+    table.header(
+      [State], [$I_"avg" ["mA"]$], [$I_"peak" ["mA"]$], [$V_"shunt"$ Baseline/peak], [Observations]
+    ),
+    [IDLE],[38.8],[42.1],[38.8/42.1],[],
+    [GPIO],[38.9],[42.6],[38.9/42.6],[Rises to 41.7/45.2 when LED on],
+    [BUSY],[40.0],[45.0],[40.0/45.0],[High avg and peak],
+    [PERIODIC],[39.2],[43.9],[39.2/43.9],[Lower avg but peaks still high],
+  )
+  #grid(
+    columns: 2,
+    column-gutter: 2pt,
+    figure(image("../../assets/LAB3_TASK4IDLE.jpg"), caption: "IDLE-state."),
+    figure(image("../../assets/LAB3_TASK4BUSY.jpg"), caption: "BUSY-state")
+  )
