@@ -18,7 +18,7 @@
 = CPS LAB 3 REPORT
 
 Board: ATmega328PB Xplained Mini  rev. 05\
-Power supply: TASK 0: Tenma 72-13310, TASKS 1-4 RIGOL DP932E.\
+Power supply: TASK 0, 5-7: Tenma 72-13310, TASKS 1-4 RIGOL DP932E.\
 
 == TASK 0
 
@@ -57,13 +57,13 @@ We used a simple program that toggles the LED on and off when pressing the onboa
   #grid(
     columns: 2,
     column-gutter: 2pt,
-    figure(image("../../assets/LAB3_TASK2A.jpg"), caption: "Measured current."),
-    figure(image("../../assets/LAB3_TASK2V.png"), caption: "Measured voltage over the shunt.")
+    figure(image("/assets/LAB3_TASK2A.jpg"), caption: "Measured current."),
+    figure(image("/assets/LAB3_TASK2V.png"), caption: "Measured voltage over the shunt.")
   )
 
   == TASK 3
 
-  #figure(image("../../assets/LAB3_TASK3_TRANSIENT.jpg"), caption: "One transient captured.")
+  #figure(image("/assets/LAB3_TASK3_TRANSIENT.jpg"), caption: "One transient captured.")
 
   == TASK 4
   All currents calculated with 1 $Omega$ shunt.
@@ -81,8 +81,8 @@ We used a simple program that toggles the LED on and off when pressing the onboa
   #grid(
     columns: 2,
     column-gutter: 2pt,
-    figure(image("../../assets/LAB3_TASK4IDLE.jpg"), caption: "IDLE-state."),
-    figure(image("../../assets/LAB3_TASK4BUSY.jpg"), caption: "BUSY-state")
+    figure(image("/assets/LAB3_TASK4IDLE.jpg"), caption: "IDLE-state."),
+    figure(image("/assets/LAB3_TASK4BUSY.jpg"), caption: "BUSY-state")
   )
 
   == TASK 5
@@ -101,8 +101,8 @@ turned off.
   #grid(
     columns: 2,
     column-gutter: 2pt,
-    figure(image("../../assets/LAB3_TASK5_Continuous.jpg"), caption: "Continuous mode"),
-    figure(image("../../assets/LAB3_TASK5_DutyCycle.jpg"), caption: "Duty cycle mode")
+    figure(image("/assets/LAB3_TASK5_Continuous.jpg"), caption: "Continuous mode"),
+    figure(image("/assets/LAB3_TASK5_DutyCycle.jpg"), caption: "Duty cycle mode")
   )
 
 
@@ -121,5 +121,4 @@ The measurements highlights a difference between active and sleep mode. While in
 
 == TASK 7
   
-  
- #image("/assets/image-11.png")
+
