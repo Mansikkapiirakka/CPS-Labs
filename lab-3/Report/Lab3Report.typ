@@ -98,6 +98,14 @@ The reduction in current consumption is 6.4%.
 Even with a reduction in duty cycle, the board has a lot of overhead in current consumption. To reduce overhead, unnecessary peripherals should be
 turned off.
 
+  #grid(
+    columns: 2,
+    column-gutter: 2pt,
+    figure(image("../../assets/LAB3_TASK5_Continuous.jpg"), caption: "Continuous mode"),
+    figure(image("../../assets/LAB3_TASK5_DutyCycle.jpg"), caption: "Duty cycle mode")
+  )
+
+
   == TASK 6
   #table(columns: (1fr, 1fr, 1fr), rows: 3, stroke:0.2pt,
   [Firmware condition], [Iavg (mA)], [Supply Voltage (V)], 
@@ -111,5 +119,7 @@ turned off.
 
 The measurements highlights a difference between active and sleep mode. While in active mode the board consumes and average of 36.7 mA, in sleep mode the average current drops to 28.6 mA.
 
-  \
-  //"/assets/photo_2026-11-26_13-41-31.jpg"
+== TASK 7
+  
+  
+ #image("/assets/image-11.png")
