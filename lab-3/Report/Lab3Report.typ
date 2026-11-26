@@ -84,3 +84,16 @@ We used a simple program that toggles the LED on and off when pressing the onboa
     figure(image("../../assets/LAB3_TASK4IDLE.jpg"), caption: "IDLE-state."),
     figure(image("../../assets/LAB3_TASK4BUSY.jpg"), caption: "BUSY-state")
   )
+
+  == TASK 5
+
+  The continuous mode toggles the onboard LED in a while loop and the duty cycled mode toggles the LED with a period of 100 ms and 10% duty cycle (10 ms).
+
+#table(columns: 5, rows: 3, table.header(
+  [Mode], [$I_"avg"$(mA)], [$I_"peak"$(mA)], [Period(ms)], [Activity / Wait Ratio]),
+[Continuous], [42.2], [44.2], [$infinity$], [100%],
+[PWM], [39.5], [43.4], [100], [10%])
+
+The reduction in current consumption is 6.4%.
+Even with a reduction in duty cycle, the board has a lot of overhead in current consumption. To reduce overhead, unnecessary peripherals should be
+turned off.
