@@ -61,7 +61,7 @@ We used a simple program that toggles the LED on and off when pressing the onboa
     figure(image("../../assets/LAB3_TASK2V.png"), caption: "Measured voltage over the shunt.")
   )
 
-== TASK 3
+  == TASK 3
 
   #figure(image("../../assets/LAB3_TASK3_TRANSIENT.jpg"), caption: "One transient captured.")
 
@@ -97,3 +97,19 @@ We used a simple program that toggles the LED on and off when pressing the onboa
 The reduction in current consumption is 6.4%.
 Even with a reduction in duty cycle, the board has a lot of overhead in current consumption. To reduce overhead, unnecessary peripherals should be
 turned off.
+
+  == TASK 6
+  #table(columns: (1fr, 1fr, 1fr), rows: 3, stroke:0.2pt,
+  [Firmware condition], [Iavg (mA)], [Supply Voltage (V)], 
+  [Active / Reference], [$35.7$ ], [5 V], 
+  [Sleep / low power], [$28.6$], [ 5 V],  
+  )
+ 
+
+  #figure(image(height:5cm,"/assets/LAB3_TASK6_reference.png"), caption: "reference condition")
+  #figure(image(height: 6cm,"/assets/LAB3_TASK6_sleep.png"), caption:"sleep condition" )
+
+The measurements highlights a difference between active and sleep mode. While in active mode the board consumes and average of 36.7 mA, in sleep mode the average current drops to 28.6 mA.
+
+  \
+  //"/assets/photo_2026-11-26_13-41-31.jpg"
